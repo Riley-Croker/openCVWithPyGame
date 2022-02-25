@@ -5,6 +5,7 @@
 import cv2
 from cv2 import circle
 import pygame
+import random
 
 from HandDetector import HandDetector
 
@@ -49,12 +50,18 @@ def main():
     # keeps track of whether hand is open or closed
     handIsOpen = True
 
+    # rectangle object
+    aRect = pygame.Rect(300,300,200,100)
+    rectColor = (255,0,255)
+
     # while the opencv window is running
     while (not handDetector.shouldClose) and gameIsRunning:
         # update the webcam feed and hand tracker calculations
         handDetector.update()
 
         WINDOW.fill((42,42,42))
+        
+        pygame.draw.rect(WINDOW, rectColor, aRect)
 
         # if there is at least one hand seen, then
         # print out the landmark positions
@@ -65,6 +72,7 @@ def main():
 
             circleX = WIDTH - mapToNewRange(circleX, 0, 640, 0, WIDTH)
             circleY = mapToNewRange(circleY, 0, 480, 0, HEIGHT)
+            
 
             # detects if hand is open or not
             if handDetector.landmarkDictionary[0][12][1] < handDetector.landmarkDictionary[0][9][1] :
@@ -73,11 +81,20 @@ def main():
             else:
                 handIsOpen = False
                 circleColor = (255,0,0)
+       
+            # check collision between rectangle and hand point
+            if(aRect.collidepoint(circleX,circleY)):
+                rectColor = (255,255,0)
+                if not handIsOpen:
+                    rectColor = (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+            else:
+                rectColor = (255,0,255)
 
             #draw circle at point 9
-            pygame.draw.circle(WINDOW, circleColor, (circleX,circleY), 50)
+            pygame.draw.circle(WINDOW, circleColor, (circleX,circleY), 25)
 
             print(handIsOpen)
+        
  
         # for all the game events
         for event in pygame.event.get():
@@ -89,8 +106,6 @@ def main():
         pygame.display.update()
 
         
-
-
     # Closes all the frames
     cv2.destroyAllWindows()
 
