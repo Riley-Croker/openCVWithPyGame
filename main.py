@@ -2,7 +2,6 @@
 # imports
 #############
 
-from ctypes.wintypes import HACCEL
 import cv2
 from cv2 import circle
 import pygame
@@ -46,6 +45,9 @@ def main():
     circleY = 0
     circleZ = 0
 
+    # keeps track of whether hand is open or closed
+    handIsOpen = True
+
     # while the opencv window is running
     while (not handDetector.shouldClose) and gameIsRunning:
         # update the webcam feed and hand tracker calculations
@@ -65,6 +67,13 @@ def main():
 
             #draw circle at point 9
             pygame.draw.circle(WINDOW, (0,255,255), (circleX,circleY), 50)
+
+            if handDetector.landmarkDictionary[0][12][1] < handDetector.landmarkDictionary[0][9][1] :
+                handIsOpen = True
+            else:
+                handIsOpen = False
+
+            print(handIsOpen)
  
         # for all the game events
         for event in pygame.event.get():
