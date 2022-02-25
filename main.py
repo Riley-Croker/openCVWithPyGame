@@ -44,6 +44,7 @@ def main():
     circleX = 0
     circleY = 0
     circleZ = 0
+    circleColor = (0,255,255)
 
     # keeps track of whether hand is open or closed
     handIsOpen = True
@@ -65,13 +66,16 @@ def main():
             circleX = WIDTH - mapToNewRange(circleX, 0, 640, 0, WIDTH)
             circleY = mapToNewRange(circleY, 0, 480, 0, HEIGHT)
 
-            #draw circle at point 9
-            pygame.draw.circle(WINDOW, (0,255,255), (circleX,circleY), 50)
-
+            # detects if hand is open or not
             if handDetector.landmarkDictionary[0][12][1] < handDetector.landmarkDictionary[0][9][1] :
                 handIsOpen = True
+                circleColor = (0,255,255)
             else:
                 handIsOpen = False
+                circleColor = (255,0,0)
+
+            #draw circle at point 9
+            pygame.draw.circle(WINDOW, circleColor, (circleX,circleY), 50)
 
             print(handIsOpen)
  
